@@ -16,6 +16,7 @@ import { SvgIconRegistryService } from './svg-icon-registry.service';
 export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() src:string;
 	@Input() stretch = false;
+	@Input() supportCss = true;
 
 	// Adapted from ngStyle
 	@Input()
@@ -93,10 +94,36 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			const icon = <SVGElement>svg.cloneNode(true);
 			const elem = this.element.nativeElement;
 
+			if (this.supportCss) {
+				this.copyNgContentAttribute(elem, icon);
+			}
+
 			elem.innerHTML = '';
 			this.renderer.appendChild(elem, icon);
 
 			this.stylize();
+		}
+	}
+
+	private copyNgContentAttribute(hostElem: any, icon: SVGElement) {
+		const attributes = <NamedNodeMap>hostElem.attributes;
+
+		for (let i = 0; i < attributes.length; i++) {
+			const attribute = attributes.item(i);
+
+			if (attribute.name.startsWith('_ngcontent')) {
+				this.setNgContentAttribute(icon, attribute.name);
+				break;
+			}
+		}
+	}
+
+	private setNgContentAttribute(parent: Node, attributeName: string) {
+		this.renderer.setAttribute(parent, attributeName, '');
+
+		for (let i = 0; i < parent.childNodes.length; i++) {
+			const child = parent.childNodes[i];
+			this.setNgContentAttribute(child, attributeName);
 		}
 	}
 
