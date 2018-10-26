@@ -123,7 +123,9 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 
 		for (let i = 0; i < parent.childNodes.length; i++) {
 			const child = parent.childNodes[i];
-			this.setNgContentAttribute(child, attributeName);
+			if (child instanceof Element) {
+				this.setNgContentAttribute(child, attributeName);
+			}
 		}
 	}
 
