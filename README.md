@@ -45,6 +45,11 @@ Basic usage is:
 ```
 *Note that without a height or width set, the SVG may not display!*
 
+If svg was previously loaded via registry with name it can be used like this:
+```html
+<svg-icon name="eye" [svgStyle]="{ 'width.px':90 }"></svg-icon>
+```
+
 More complex styling can be applied to the svg, for example:
 ```html
 <svg-icon src="images/eye.svg" [stretch]="true"
@@ -54,6 +59,7 @@ More complex styling can be applied to the svg, for example:
 
 The following attributes can be set on svg-icon:
 - **src** - The path to SVG.
+- **name** - The name of SVG, under which it was loaded via SvgIconRegistryService.
 - **[svgStyle]** - Styles to be applied to the SVG, this is based on the familiar [ngStyle].
 - **[stretch]** - A boolean (default is false) that, when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
 
@@ -70,6 +76,13 @@ To preload a SVG file from a URL into the registry:
 {
   ...
   this.iconReg.loadSvg('foo.svg');
+}
+```
+To preload a SVG file from a URL into the registry with predefined name:
+```typescript
+{
+  ...
+  this.iconReg.loadSvg('foo.svg', 'foo');
 }
 ```
 To add a SVG from a string:

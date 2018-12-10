@@ -5,7 +5,7 @@ import { Observable, of as observableOf, throwError as observableThrowError } fr
 import { map, tap, catchError, finalize, share } from 'rxjs/operators';
 
 import { PLATFORM_ID } from '@angular/core';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 
 export const SERVER_URL = new InjectionToken<string>('SERVER_URL');
 
@@ -34,35 +34,48 @@ export class SvgIconRegistryService {
 	}
 
 	/** Load a SVG to the registry from a URL. */
-	loadSvg(url:string) : Observable<SVGElement> {
-
+	loadSvg(url:string, name: string = url): Observable<SVGElement> {
+    
+		// not sure if there should be a possibility to use name for server usage
+		// so overriding it for now if provided
+		// maybe should separate functionality for url and name use-cases
 		if (this.serverUrl && url.match(/^(http(s)?):/) === null) {
 			url = this.serverUrl + url;
+			name = url;
 		}
 
-		if (this.iconsByUrl.has(url)) {
-			return observableOf(this.iconsByUrl.get(url));
-		} else if (this.iconsLoadingByUrl.has(url)) {
-			return this.iconsLoadingByUrl.get(url);
-		} else {
-			const o = <Observable<SVGElement>> this.http.get(url, { responseType: 'text' }).pipe(
-				map(svg => {
-					const div = this.document.createElement('DIV');
-					div.innerHTML = svg;
-					return <SVGElement>div.querySelector('svg');
-				}),
-				tap (svg => this.iconsByUrl.set(url, svg) ),
-				catchError(err => {
-					console.error(err);
-					return observableThrowError(err);
-				}),
-				finalize(() => this.iconsLoadingByUrl.delete(url) ),
-				share()
-			);
-
-			this.iconsLoadingByUrl.set(url, o);
-			return o;
+		if (this.iconsByUrl.has(name)) {
+			return observableOf(this.iconsByUrl.get(name));
+		} else if (this.iconsLoadingByUrl.has(name)) {
+			return this.iconsLoadingByUrl.get(name);
 		}
+		const o = <Observable<SVGElement>> this.http.get(url, { responseType: 'text' }).pipe(
+			map(svg => {
+				const div = document.createElement('DIV');
+				div.innerHTML = svg;
+				return <SVGElement>div.querySelector('svg');
+			}),
+			tap (svg => this.iconsByUrl.set(name, svg) ),
+			catchError(err => {
+				console.error(err);
+				return observableThrowError(err);
+			}),
+			finalize(() => this.iconsLoadingByUrl.delete(name) ),
+			share()
+		);
+
+		this.iconsLoadingByUrl.set(name, o);
+		return o;
+	}
+
+	/** Get loaded SVG from registry by name. (also works by url because of blended map) */
+	getSvgByName(name: string): Observable<SVGElement> {
+		if (this.iconsByUrl.has(name)) {
+			return observableOf(this.iconsByUrl.get(name));
+		} else if (this.iconsLoadingByUrl.has(name)) {
+			return this.iconsLoadingByUrl.get(name);
+		}
+		return observableThrowError(`No svg with name '${name}' has been loaded`);
 	}
 
 	/** Remove a SVG from the registry by URL (or name). */

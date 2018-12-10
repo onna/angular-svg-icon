@@ -15,6 +15,7 @@ import { SvgIconRegistryService } from './svg-icon-registry.service';
 
 export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() src:string;
+	@Input() name:string;
 	@Input() stretch = false;
 
 	// Adapted from ngStyle
@@ -46,7 +47,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	ngOnChanges(changeRecord: {[key:string]:SimpleChange}) {
-		if (changeRecord['src']) {
+		if (changeRecord['src'] || changeRecord['name']) {
 			if (this.svg) {
 				this.destroy();
 			}
@@ -67,10 +68,16 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	private init() {
-		this.icnSub = this.iconReg.loadSvg(this.src).subscribe(svg => {
-			this.setSvg(svg);
-			this.resetDiffer();
-		});
+		if (this.name) {
+			this.icnSub = this.iconReg.getSvgByName(this.name).subscribe(this.initSvg.bind(this));
+			return;
+		}
+		this.icnSub = this.iconReg.loadSvg(this.src).subscribe(this.initSvg.bind(this));
+	}
+
+	private initSvg(svg: SVGElement): void {
+		this.setSvg(svg);
+		this.resetDiffer();
 	}
 
 	private destroy() {
