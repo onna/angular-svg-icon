@@ -16,7 +16,7 @@ export class SvgIconRegistryService {
 	private iconsByUrl = new Map<string, SVGElement>();
 	private iconsLoadingByUrl = new Map<string, Observable<SVGElement>>();
 
-	constructor(private http:HttpClient,
+	constructor(private http: HttpClient,
 				@Inject(PLATFORM_ID) private platformId: Object,
 				@Optional() @Inject(SERVER_URL) protected serverUrl: string,
 				@Optional() @Inject(DOCUMENT) private _document: any) {
@@ -24,7 +24,7 @@ export class SvgIconRegistryService {
 	}
 
 	/** Add a SVG to the registry by passing a name and the SVG. */
-	addSvg(name:string, data:string) {
+	addSvg(name: string, data: string) {
 		if (!this.iconsByUrl.has(name)) {
 			const div = this.document.createElement('DIV');
 			div.innerHTML = data;
@@ -34,8 +34,8 @@ export class SvgIconRegistryService {
 	}
 
 	/** Load a SVG to the registry from a URL. */
-	loadSvg(url:string, name: string = url): Observable<SVGElement> {
-    
+	loadSvg(url: string, name: string = url) : Observable<SVGElement> {
+
 		// not sure if there should be a possibility to use name for server usage
 		// so overriding it for now if provided
 		// maybe should separate functionality for url and name use-cases
@@ -69,7 +69,7 @@ export class SvgIconRegistryService {
 	}
 
 	/** Get loaded SVG from registry by name. (also works by url because of blended map) */
-	getSvgByName(name: string): Observable<SVGElement> {
+	getSvgByName(name: string) : Observable<SVGElement> {
 		if (this.iconsByUrl.has(name)) {
 			return observableOf(this.iconsByUrl.get(name));
 		} else if (this.iconsLoadingByUrl.has(name)) {
@@ -79,14 +79,14 @@ export class SvgIconRegistryService {
 	}
 
 	/** Remove a SVG from the registry by URL (or name). */
-	unloadSvg(url:string) {
+	unloadSvg(url: string) {
 		if (this.iconsByUrl.has(url)) {
 			this.iconsByUrl.delete(url);
 		}
 	}
 }
 
-export function SVG_ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry:SvgIconRegistryService, http:HttpClient,
+export function SVG_ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry: SvgIconRegistryService, http: HttpClient,
 	platformId: Object, serverUrl?: string, document?: any) {
 	return parentRegistry || new SvgIconRegistryService(http, platformId,  serverUrl, document);
 }

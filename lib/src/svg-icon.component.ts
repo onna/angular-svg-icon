@@ -14,28 +14,28 @@ import { SvgIconRegistryService } from './svg-icon-registry.service';
 })
 
 export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
-	@Input() src:string;
-	@Input() name:string;
+	@Input() src: string;
+	@Input() name: string;
 	@Input() stretch = false;
 
 	// Adapted from ngStyle
 	@Input()
-	set svgStyle(v: {[key:string]: string }) {
+	set svgStyle(v: {[key: string]: string }) {
 		this._svgStyle = v;
 		if (!this.differ && v) {
 			this.differ = this.differs.find(v).create();
 		}
 	}
 
-	private svg:SVGElement;
-	private icnSub:Subscription;
-	private differ:KeyValueDiffer<string, string|number>;
-	private _svgStyle: {[key:string]:string};
+	private svg: SVGElement;
+	private icnSub: Subscription;
+	private differ: KeyValueDiffer<string, string|number>;
+	private _svgStyle: {[key: string]: string};
 
-	constructor(private element:ElementRef,
-		private differs:KeyValueDiffers,
-		private renderer:Renderer2,
-		private iconReg:SvgIconRegistryService) {
+	constructor(private element: ElementRef,
+		private differs: KeyValueDiffers,
+		private renderer: Renderer2,
+		private iconReg: SvgIconRegistryService) {
 	}
 
 	ngOnInit() {
@@ -46,7 +46,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		this.destroy();
 	}
 
-	ngOnChanges(changeRecord: {[key:string]:SimpleChange}) {
+	ngOnChanges(changeRecord: {[key: string]: SimpleChange}) {
 		if (changeRecord['src'] || changeRecord['name']) {
 			if (this.svg) {
 				this.destroy();
@@ -75,7 +75,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		this.icnSub = this.iconReg.loadSvg(this.src).subscribe(this.initSvg.bind(this));
 	}
 
-	private initSvg(svg: SVGElement): void {
+	private initSvg(svg: SVGElement) : void {
 		this.setSvg(svg);
 		this.resetDiffer();
 	}
@@ -94,7 +94,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		}
 	}
 
-	private setSvg(svg:SVGElement) {
+	private setSvg(svg: SVGElement) {
 		if (svg) {
 			this.svg = svg;
 			const icon = <SVGElement>svg.cloneNode(true);
@@ -120,9 +120,9 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	private applyChanges(changes: KeyValueChanges<string, string|number>) {
-		changes.forEachRemovedItem((record:KeyValueChangeRecord<string, string|number>) => this.setStyle(record.key, null));
-		changes.forEachAddedItem((record:KeyValueChangeRecord<string, string|number>) => this.setStyle(record.key, record.currentValue));
-		changes.forEachChangedItem((record:KeyValueChangeRecord<string, string|number>) => this.setStyle(record.key, record.currentValue));
+		changes.forEachRemovedItem((record: KeyValueChangeRecord<string, string|number>) => this.setStyle(record.key, null));
+		changes.forEachAddedItem((record: KeyValueChangeRecord<string, string|number>) => this.setStyle(record.key, record.currentValue));
+		changes.forEachChangedItem((record: KeyValueChangeRecord<string, string|number>) => this.setStyle(record.key, record.currentValue));
 	}
 
 	private setStyle(nameAndUnit: string, value: string|number|null|undefined) {
