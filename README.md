@@ -59,7 +59,7 @@ More complex styling can be applied to the svg, for example:
 
 The following attributes can be set on svg-icon:
 - **src** - The path to SVG.
-- **name** - The name of SVG, under which it was loaded via SvgIconRegistryService.
+- **name** - An optional name of SVG, under which it was loaded via SvgIconRegistryService.
 - **[svgStyle]** - Styles to be applied to the SVG, this is based on the familiar [ngStyle].
 - **[stretch]** - A boolean (default is false) that, when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
 

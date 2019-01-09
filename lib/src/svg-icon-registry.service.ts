@@ -51,7 +51,7 @@ export class SvgIconRegistryService {
 		}
 		const o = <Observable<SVGElement>> this.http.get(url, { responseType: 'text' }).pipe(
 			map(svg => {
-				const div = document.createElement('DIV');
+				const div = this.document.createElement('DIV');
 				div.innerHTML = svg;
 				return <SVGElement>div.querySelector('svg');
 			}),

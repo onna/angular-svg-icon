@@ -1,7 +1,7 @@
 {
   "name": "angular-svg-icon",
   "description": "Angular 6+ component for inlining SVGs allowing them to be easily styled with CSS.",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/czeckd/angular-svg-icon.git"
@@ -23,13 +23,13 @@
     "lite": "lite-server"
   },
   "devDependencies": {
-    "@angular/common": "^7.1.0",
-    "@angular/compiler": "^7.1.0",
-    "@angular/compiler-cli": "^7.1.0",
-    "@angular/core": "^7.1.0",
-    "@angular/forms": "^7.1.0",
-    "@angular/platform-browser": "^7.1.0",
-    "@angular/platform-browser-dynamic": "^7.1.0",
+    "@angular/common": "^7.2.0",
+    "@angular/compiler": "^7.2.0",
+    "@angular/compiler-cli": "^7.2.0",
+    "@angular/core": "^7.2.0",
+    "@angular/forms": "^7.2.0",
+    "@angular/platform-browser": "^7.2.0",
+    "@angular/platform-browser-dynamic": "^7.2.0",
     "@types/node": "~8.9.4",
     "codelyzer": "^4.3.0",
     "concurrently": "^2.2.0",
@@ -43,7 +43,7 @@
     "ts-node": "~5.0.1",
     "tsickle": "^0.34.0",
     "tslint": "~5.9.1",
-    "typescript": "~3.1.6",
+    "typescript": "~3.2.2",
     "zone.js": "^0.8.26"
   }
 }
