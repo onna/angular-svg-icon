@@ -109,24 +109,24 @@ This can be achieved by providing an `SvgLoader` to the server module:
 
 ```typescript
 export function svgLoaderFactory(http: HttpClient, transferState: TransferState) {
-	return new SvgServerLoader('browser/assets/icons', transferState);
+  return new SvgServerLoader('browser/assets/icons', transferState);
 }
 
 @NgModule({
-	imports: [
-		AngularSvgIconModule.forRoot({
-			loader: {
-				provide: SvgLoader,
-				useFactory: svgLoaderFactory,
-				deps: [ HttpClient, TransferState ],
-			}
-		}),
-		AppModule,
-		ServerModule,
-		ServerTransferStateModule,
-		ModuleMapLoaderModule,
-	],
-	bootstrap: [ AppComponent ],
+  imports: [
+    AngularSvgIconModule.forRoot({
+      loader: {
+        provide: SvgLoader,
+        useFactory: svgLoaderFactory,
+        deps: [ HttpClient, TransferState ],
+      }
+    }),
+    AppModule,
+    ServerModule,
+    ServerTransferStateModule,
+    ModuleMapLoaderModule,
+  ],
+  bootstrap: [ AppComponent ],
 })
 export class AppServerModule {
 }
@@ -145,29 +145,27 @@ const baseName = require('path').basename;
 
 export class SvgServerLoader implements SvgLoader {
 
-	constructor(private iconPath: string,
-				private transferState: TransferState) {
-	}
+  constructor(private iconPath: string,
+    private transferState: TransferState) {
+  }
 
-	getSvg(url: string): Observable<string> {
-		const parsedUrl:URL = parseUrl(url);
-		const fileNameWithHash = baseName(parsedUrl.pathname);
-		// Remove content hashing
-		const fileName = fileNameWithHash.replace(/^(.*)(\.[0-9a-f]{16,})(\.svg)$/i, '$1$3');
-		const filePath = join(this.iconPath, fileName);
+  getSvg(url: string): Observable<string> {
+    const parsedUrl:URL = parseUrl(url);
+    const fileNameWithHash = baseName(parsedUrl.pathname);
+    // Remove content hashing
+    const fileName = fileNameWithHash.replace(/^(.*)(\.[0-9a-f]{16,})(\.svg)$/i, '$1$3');
+    const filePath = join(this.iconPath, fileName);
+    return Observable.create(observer => {
+      const svgData = fs.readFileSync(filePath, 'utf8');
 
-		return Observable.create(observer => {
+      // Here we save the translations in the transfer-state
+      const key: StateKey<number> = makeStateKey<number>('transfer-svg:' + url);
+      this.transferState.set(key, svgData);
 
-			const svgData = fs.readFileSync(filePath, 'utf8');
-
-			// Here we save the translations in the transfer-state
-			const key: StateKey<number> = makeStateKey<number>('transfer-svg:' + url);
-			this.transferState.set(key, svgData);
-
-			observer.next(svgData);
-			observer.complete();
-		});
-	}
+      observer.next(svgData);
+      observer.complete();
+    });
+  }
 }
 ```
 
@@ -179,25 +177,22 @@ look like that:
 
 ```typescript
 export class SvgBrowserLoader implements SvgLoader {
-
-	constructor(private transferState: TransferState,
-				private http: HttpClient) {
-	}
-
-	getSvg(url: string): Observable<string> {
-		const key: StateKey<number> = makeStateKey<number>('transfer-svg:' + url);
-		const data = this.transferState.get(key, null);
-
-		// First we are looking for the translations in transfer-state, if none found, http load as fallback
-		if (data) {
-			return Observable.create(observer => {
-				observer.next(data);
-				observer.complete();
-			});
-		} else {
-			return new SvgHttpLoader(this.http).getSvg(url);
-		}
-	}
+  constructor(private transferState: TransferState,
+    private http: HttpClient) {
+  }
+  getSvg(url: string): Observable<string> {
+    const key: StateKey<number> = makeStateKey<number>('transfer-svg:' + url);
+    const data = this.transferState.get(key, null);
+    // First we are looking for the translations in transfer-state, if none found, http load as fallback
+    if (data) {
+      return Observable.create(observer => {
+        observer.next(data);
+        observer.complete();
+      });
+    } else {
+      return new SvgHttpLoader(this.http).getSvg(url);
+    }
+  }
 }
 ```
 
