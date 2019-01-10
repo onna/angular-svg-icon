@@ -103,24 +103,108 @@ To unload a SVG from the registry.
 ```
 
 ## Usage with Angular Universal
-To support loading the SVGs URLs server-side with Universal, either the full URL 
-of the SVG must be provided or a `SERVER_URL` must be defined in the 
-AppServerModule:
+
+When rendering on server-side, the SVGs must be loaded via the file system.
+This can be achieved by providing an `SvgLoader` to the server module:
+
 ```typescript
-...
-import { SERVER_URL } from 'angular-svg-icon';
+export function svgLoaderFactory(http: HttpClient, transferState: TransferState) {
+	return new SvgServerLoader('browser/assets/icons', transferState);
+}
 
 @NgModule({
-  imports: [
-    AppModule,
-    ServerModule,
-    ModuleMapLoaderModule,
-    ServerTransferStateModule,
-  ],
-  bootstrap: [AppComponent],
-  providers: [{provide: SERVER_URL, useValue: 'http://localhost:4000/'}]
-  ...
+	imports: [
+		AngularSvgIconModule.forRoot({
+			loader: {
+				provide: SvgLoader,
+				useFactory: svgLoaderFactory,
+				deps: [ HttpClient, TransferState ],
+			}
+		}),
+		AppModule,
+		ServerModule,
+		ServerTransferStateModule,
+		ModuleMapLoaderModule,
+	],
+	bootstrap: [ AppComponent ],
+})
+export class AppServerModule {
+}
 ```
+
+The loader itself is up to you to implement because it depends on where your
+icons are stored locally. An implementation that additionally saves the icons
+in the transfer state of your app in order to avoid double requests could look
+like that:
+
+```typescript
+const fs = require('fs');
+const join = require('path').join;
+const parseUrl = require('url').parse;
+const baseName = require('path').basename;
+
+export class SvgServerLoader implements SvgLoader {
+
+	constructor(private iconPath: string,
+				private transferState: TransferState) {
+	}
+
+	getSvg(url: string): Observable<string> {
+		const parsedUrl:URL = parseUrl(url);
+		const fileNameWithHash = baseName(parsedUrl.pathname);
+		// Remove content hashing
+		const fileName = fileNameWithHash.replace(/^(.*)(\.[0-9a-f]{16,})(\.svg)$/i, '$1$3');
+		const filePath = join(this.iconPath, fileName);
+
+		return Observable.create(observer => {
+
+			const svgData = fs.readFileSync(filePath, 'utf8');
+
+			// Here we save the translations in the transfer-state
+			const key: StateKey<number> = makeStateKey<number>('transfer-svg:' + url);
+			this.transferState.set(key, svgData);
+
+			observer.next(svgData);
+			observer.complete();
+		});
+	}
+}
+```
+
+Note that this is executed in a local Node.js context, so the Node.js API is 
+available.
+
+A loader for the client module that firstly checks the transfer state could
+look like that:
+
+```typescript
+export class SvgBrowserLoader implements SvgLoader {
+
+	constructor(private transferState: TransferState,
+				private http: HttpClient) {
+	}
+
+	getSvg(url: string): Observable<string> {
+		const key: StateKey<number> = makeStateKey<number>('transfer-svg:' + url);
+		const data = this.transferState.get(key, null);
+
+		// First we are looking for the translations in transfer-state, if none found, http load as fallback
+		if (data) {
+			return Observable.create(observer => {
+				observer.next(data);
+				observer.complete();
+			});
+		} else {
+			return new SvgHttpLoader(this.http).getSvg(url);
+		}
+	}
+}
+```
+
+This is executed on browser side. Note that the fallback when no data is
+available uses `SvgHttpLoader`, which is also the default loader if you don't
+provide one.
+
 ## SVG Preparation
 The SVG should be modified to remove the height and width attributes from the file
 per Sara Soueidan's advice in "[Making SVGs Responsive With
