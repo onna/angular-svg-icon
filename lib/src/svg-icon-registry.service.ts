@@ -1,11 +1,9 @@
-import { Inject, Injectable, InjectionToken, Optional, SkipSelf } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable, InjectionToken, Optional, PLATFORM_ID, SkipSelf } from '@angular/core';
 
 import { Observable, of as observableOf, throwError as observableThrowError } from 'rxjs';
-import { map, tap, catchError, finalize, share } from 'rxjs/operators';
-
-import { PLATFORM_ID } from '@angular/core';
+import { catchError, finalize, map, share, tap } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
+import { SvgLoader } from './svg-loader';
 
 export const SERVER_URL = new InjectionToken<string>('SERVER_URL');
 
@@ -16,7 +14,7 @@ export class SvgIconRegistryService {
 	private iconsByUrl = new Map<string, SVGElement>();
 	private iconsLoadingByUrl = new Map<string, Observable<SVGElement>>();
 
-	constructor(private http: HttpClient,
+	constructor(private loader: SvgLoader,
 				@Inject(PLATFORM_ID) private platformId: Object,
 				@Optional() @Inject(SERVER_URL) protected serverUrl: string,
 				@Optional() @Inject(DOCUMENT) private _document: any) {
@@ -49,7 +47,7 @@ export class SvgIconRegistryService {
 		} else if (this.iconsLoadingByUrl.has(name)) {
 			return this.iconsLoadingByUrl.get(name);
 		}
-		const o = <Observable<SVGElement>> this.http.get(url, { responseType: 'text' }).pipe(
+		const o = <Observable<SVGElement>> this.loader.getSvg(url).pipe(
 			map(svg => {
 				const div = this.document.createElement('DIV');
 				div.innerHTML = svg;
@@ -86,14 +84,14 @@ export class SvgIconRegistryService {
 	}
 }
 
-export function SVG_ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry: SvgIconRegistryService, http: HttpClient,
+export function SVG_ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry: SvgIconRegistryService, loader: SvgLoader,
 	platformId: Object, serverUrl?: string, document?: any) {
-	return parentRegistry || new SvgIconRegistryService(http, platformId,  serverUrl, document);
+	return parentRegistry || new SvgIconRegistryService(loader, platformId,  serverUrl, document);
 }
 
 export const SVG_ICON_REGISTRY_PROVIDER = {
 	provide: SvgIconRegistryService,
-	deps: [ [new Optional(), new SkipSelf(), SvgIconRegistryService], HttpClient, [PLATFORM_ID as InjectionToken<any>],
+	deps: [ [new Optional(), new SkipSelf(), SvgIconRegistryService], SvgLoader, [PLATFORM_ID as InjectionToken<any>],
 			[new Optional(), SERVER_URL as InjectionToken<string>], [new Optional(), DOCUMENT as InjectionToken<any>]
 	],
 	useFactory: SVG_ICON_REGISTRY_PROVIDER_FACTORY
