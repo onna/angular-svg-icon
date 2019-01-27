@@ -73,3 +73,49 @@ span.px:after {
 	margin-right: 10px;
 	font-size: smaller;
 }
+
+.multi-path-svg svg {
+	width: 200px;
+	height: 200px;
+}
+
+.animated path {
+	transition: 1s;
+}
+
+.multi-path-svg path#p1 {
+	fill: red;
+}
+
+.multi-path-svg path#p2 {
+	fill: blue;
+}
+
+.multi-path-svg path#p3 {
+	fill: green;
+}
+
+.multi-path-svg path#p4 {
+	fill: orange;
+}
+
+.multi-path-svg:hover path#p1 {
+	fill: blue;
+}
+
+.multi-path-svg:hover path#p2 {
+	fill: red;
+}
+
+.multi-path-svg:hover path#p3 {
+	fill: orange;
+}
+
+.multi-path-svg:hover path#p4 {
+	fill: green;
+}
+
+code {
+	background: whitesmoke;
+	padding: 5px;
+}
