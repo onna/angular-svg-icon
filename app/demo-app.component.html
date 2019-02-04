@@ -1,9 +1,24 @@
 <div class="portal">
 
-	<div style="width:500px;">
+	<div style="width:500px;display: flex;">
 		<svg-icon src="images/eye.svg" class="red"></svg-icon>
 		<svg-icon src="images/eye.svg" class="green" style="transform: scaleX(-1);"></svg-icon>
 		<svg-icon src="images/eye.svg" class="blue"></svg-icon>
+	</div>
+
+	<div>
+		<h2>Apply css to different parts from parent component</h2>
+		<p>Using <code>[supportCss]=true</code> you can extend elements inside svg (path, polygon, etc.) via component CSS and apply animation. Even if inner elements have declared attributes.</p>
+		<pre>&lt;svg width="24" height="43" viewBox="0 0 24 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+    &lt;path id="p1" d="M11.3636 28.3847V15.725L0.20459 21.1416L11.3636 28.3847Z" fill="#5D6B6D"/>
+    &lt;path id="p2" d="M11.3636 15.8547V0.989929L0.564186 21.0964L11.3636 15.8547Z" fill="#5D6B6D"/>
+    &lt;path id="p3" d="M12.083 0.983765V15.8546L23.0342 21.1705L12.083 0.983765Z" fill="#5D6B6D"/>
+    &lt;path id="p4" d="M12.083 15.725V28.3851L23.2499 21.1452L12.083 15.725Z" fill="#5D6B6D"/>
+    &lt;path id="p5" d="M11.3636 42.1138V31.9313L0.27964 24.7402L11.3636 42.1138Z" fill="#5D6B6D"/>
+    &lt;path id="p6" d="M12.083 42.1138L23.167 24.7402L12.083 31.9313V42.1138Z" fill="#5D6B6D"/>
+&lt;/svg></pre>
+		<p>Try to hover.</p>
+		<svg-icon [supportCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
 	</div>
 
 	<form style="clear:both;">
