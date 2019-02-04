@@ -6,21 +6,6 @@
 		<svg-icon src="images/eye.svg" class="blue"></svg-icon>
 	</div>
 
-	<div>
-		<h2>Apply css to different parts from parent component</h2>
-		<p>Using <code>[supportCss]=true</code> you can extend elements inside svg (path, polygon, etc.) via component CSS and apply animation. Even if inner elements have declared attributes.</p>
-		<pre>&lt;svg width="24" height="43" viewBox="0 0 24 43" fill="none" xmlns="http://www.w3.org/2000/svg">
-    &lt;path id="p1" d="M11.3636 28.3847V15.725L0.20459 21.1416L11.3636 28.3847Z" fill="#5D6B6D"/>
-    &lt;path id="p2" d="M11.3636 15.8547V0.989929L0.564186 21.0964L11.3636 15.8547Z" fill="#5D6B6D"/>
-    &lt;path id="p3" d="M12.083 0.983765V15.8546L23.0342 21.1705L12.083 0.983765Z" fill="#5D6B6D"/>
-    &lt;path id="p4" d="M12.083 15.725V28.3851L23.2499 21.1452L12.083 15.725Z" fill="#5D6B6D"/>
-    &lt;path id="p5" d="M11.3636 42.1138V31.9313L0.27964 24.7402L11.3636 42.1138Z" fill="#5D6B6D"/>
-    &lt;path id="p6" d="M12.083 42.1138L23.167 24.7402L12.083 31.9313V42.1138Z" fill="#5D6B6D"/>
-&lt;/svg></pre>
-		<p>Try to hover.</p>
-		<svg-icon [supportCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
-	</div>
-
 	<form style="clear:both;">
 		<h2>Set the SVG style</h2>
 		<fieldset>
@@ -35,10 +20,9 @@
 			<label>border: <input type="checkbox" [(ngModel)]="border" name="border"></label>
 		</fieldset>
 		<fieldset>
-			<label>height:</label> 
+			<label>height:</label>
 			<label>auto <input type="checkbox" [(ngModel)]="autoheight" name="autoheight"></label>
 			<span class="px" *ngIf="!autoheight"><input type="number" min="0" max="1000" [(ngModel)]="h" name="height"></span>
-	
 			<span style="margin-left:10px;">&nbsp;</span>
 
 			<label>width:</label>
@@ -68,12 +52,22 @@
 	</div>
 
 	<div class="explain">
-		<p [hidden]="!display">Unloading the SVG will remove it from the registry. The next time the &lt;svg&#8209;icon&gt; is 
+		<p [hidden]="!display">Unloading the SVG will remove it from the registry. The next time the &lt;svg&#8209;icon&gt; is
 		used with the SVG's URL, the SVG will be loaded again.  Unloading will not remove a SVG already displayed in
 		the document as can be seen by the persistence of the three <svg-icon src="images/eye.svg" class="inline">
 		</svg-icon> SVG at the top of the page.</p>
 
-		<p *ngIf="!display">Reloading the SVG will cause an http fetch to occur to load the SVG into the registry 
+		<p *ngIf="!display">Reloading the SVG will cause an http fetch to occur to load the SVG into the registry
 		where it will persist until programatically unloaded.</p>
 	</div>
+
+	<div class="explain">
+		<h2>Apply css to different parts from parent component</h2>
+		<p>Using <code>[applyCss]="true"</code> elements inside the svg (path, polygon, etc.) can be extended via
+		component CSS an apply animations. This works even if inner elements have declared attributes.</p>
+
+		<p>Hover over image to see animation:</p>
+		<svg-icon [applyCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
+	</div>
+
 </div>

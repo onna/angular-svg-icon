@@ -2,7 +2,7 @@
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "angular-svg-icon",
   "description": "Angular 7 component for inlining SVGs allowing them to be easily styled with CSS.",
-  "version": "7.1.1",
+  "version": "7.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/czeckd/angular-svg-icon.git"

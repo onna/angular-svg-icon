@@ -103,6 +103,15 @@ To unload a SVG from the registry.
 }
 ```
 
+## Apply CSS
+
+Using `[applyCss]="true"`, elements inside the svg (path, polygon, etc.) can be extended via component CSS an
+apply animations. This works even if inner elements have declared attributes.
+
+```html
+<svg-icon [applyCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
+```
+
 ## Usage with Angular Universal
 
 When rendering on server-side, the SVGs must be loaded via the file system.
