@@ -17,7 +17,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() src: string;
 	@Input() name: string;
 	@Input() stretch = false;
-	@Input() supportCss = true;
+	@Input() applyCss = false;
 
 	// Adapted from ngStyle
 	@Input()
@@ -101,7 +101,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			const icon = <SVGElement>svg.cloneNode(true);
 			const elem = this.element.nativeElement;
 
-			if (this.supportCss) {
+			if (this.applyCss) {
 				this.copyNgContentAttribute(elem, icon);
 			}
 
@@ -114,10 +114,9 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 
 	private copyNgContentAttribute(hostElem: any, icon: SVGElement) {
 		const attributes = <NamedNodeMap>hostElem.attributes;
-
-		for (let i = 0; i < attributes.length; i++) {
+		const len = attributes.length;
+		for (let i = 0; i < len; i += 1) {
 			const attribute = attributes.item(i);
-
 			if (attribute.name.startsWith('_ngcontent')) {
 				this.setNgContentAttribute(icon, attribute.name);
 				break;
@@ -127,8 +126,8 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 
 	private setNgContentAttribute(parent: Node, attributeName: string) {
 		this.renderer.setAttribute(parent, attributeName, '');
-
-		for (let i = 0; i < parent.childNodes.length; i++) {
+		const len = parent.childNodes.length;
+		for (let i = 0; i < len; i += 1) {
 			const child = parent.childNodes[i];
 			if (child instanceof Element) {
 				this.setNgContentAttribute(child, attributeName);
