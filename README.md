@@ -11,7 +11,7 @@ its url. The component is responsible for displaying the SVG. After getting the
 svg from the registry it clones the `SVGElement` and the SVG to the component's
 inner HTML.
 
-This [demo](http://czeckd.github.io/angular-svg-icon/demo/) shows this module in action.
+This [demo](https://czeckd.github.io/angular-svg-icon/) shows this module in action.
 
 ## How to use?
 ```
