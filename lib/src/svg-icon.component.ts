@@ -1,4 +1,4 @@
-import { Component, DoCheck, ElementRef, HostBinding, Input,
+import { ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input,
 	KeyValueChangeRecord, KeyValueChanges, KeyValueDiffer, KeyValueDiffers,
 	OnChanges, OnDestroy, OnInit, Renderer2, SimpleChange } from '@angular/core';
 
@@ -36,7 +36,8 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	constructor(private element: ElementRef,
 		private differs: KeyValueDiffers,
 		private renderer: Renderer2,
-		private iconReg: SvgIconRegistryService) {
+		private iconReg: SvgIconRegistryService,
+		private cdr: ChangeDetectorRef) {
 	}
 
 	ngOnInit() {
@@ -109,6 +110,8 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			this.renderer.appendChild(elem, icon);
 
 			this.stylize();
+			
+			this.cdr.markForCheck();
 		}
 	}
 
