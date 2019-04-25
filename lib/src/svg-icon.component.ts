@@ -6,13 +6,10 @@ import { Subscription } from 'rxjs';
 
 import { SvgIconRegistryService } from './svg-icon-registry.service';
 
-
 @Component({
 	selector: 'svg-icon',
-	styles: [ `:host { display: inline-block; }` ],
 	template: '<ng-content></ng-content>'
 })
-
 export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() src: string;
 	@Input() name: string;
@@ -110,7 +107,6 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			this.renderer.appendChild(elem, icon);
 
 			this.stylize();
-			
 			this.cdr.markForCheck();
 		}
 	}
