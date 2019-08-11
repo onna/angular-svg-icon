@@ -1,9 +1,9 @@
 <div class="portal">
 
 	<div style="width:500px;display: flex;">
-		<svg-icon src="images/eye.svg" class="red"></svg-icon>
-		<svg-icon src="images/eye.svg" class="green" style="transform: scaleX(-1);"></svg-icon>
-		<svg-icon src="images/eye.svg" class="blue"></svg-icon>
+		<svg-icon src="assets/images/eye.svg" class="red"></svg-icon>
+		<svg-icon src="assets/images/eye.svg" class="green" style="transform: scaleX(-1);"></svg-icon>
+		<svg-icon src="assets/images/eye.svg" class="blue"></svg-icon>
 	</div>
 
 	<form style="clear:both;">
@@ -44,7 +44,7 @@
 
 	<div>
 		<button (click)="swapImg()">Swap SVG</button>
-		<pre style="display:inline-block;">Source {{img[onImg]}}</pre>
+		<pre style="display:inline-block;"> Source {{img[onImg]}}</pre>
 	</div>
 	<div>
 		<button (click)="unload(img[onImg])">{{display ? 'Unload SVG' : 'Reload SVG'}}</button>
@@ -54,7 +54,7 @@
 	<div class="explain">
 		<p [hidden]="!display">Unloading the SVG will remove it from the registry. The next time the &lt;svg&#8209;icon&gt; is
 		used with the SVG's URL, the SVG will be loaded again.  Unloading will not remove a SVG already displayed in
-		the document as can be seen by the persistence of the three <svg-icon src="images/eye.svg" class="inline">
+		the document as can be seen by the persistence of the three <svg-icon src="assets/images/eye.svg" [svgStyle]="{'width.px':14}">
 		</svg-icon> SVG at the top of the page.</p>
 
 		<p *ngIf="!display">Reloading the SVG will cause an http fetch to occur to load the SVG into the registry
@@ -67,7 +67,7 @@
 		component CSS an apply animations. This works even if inner elements have declared attributes.</p>
 
 		<p>Hover over image to see animation:</p>
-		<svg-icon [applyCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
+		<svg-icon [applyCss]="true" src="assets/images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
 	</div>
 
 </div>

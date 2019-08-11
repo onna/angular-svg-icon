@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input,
 	KeyValueChangeRecord, KeyValueChanges, KeyValueDiffer, KeyValueDiffers,
-	OnChanges, OnDestroy, OnInit, Renderer2, SimpleChange } from '@angular/core';
+	OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
@@ -30,7 +30,8 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	private differ: KeyValueDiffer<string, string|number>;
 	private _svgStyle: {[key: string]: string};
 
-	constructor(private element: ElementRef,
+	constructor(
+		private element: ElementRef,
 		private differs: KeyValueDiffers,
 		private renderer: Renderer2,
 		private iconReg: SvgIconRegistryService,
@@ -45,14 +46,14 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		this.destroy();
 	}
 
-	ngOnChanges(changeRecord: {[key: string]: SimpleChange}) {
-		if (changeRecord['src'] || changeRecord['name']) {
+	ngOnChanges(changeRecord: SimpleChanges) {
+		if (changeRecord.src || changeRecord.name) {
 			if (this.svg) {
 				this.destroy();
 			}
 			this.init();
 		}
-		if (changeRecord['stretch']) {
+		if (changeRecord.stretch) {
 			this.stylize();
 		}
 	}
@@ -69,14 +70,12 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	private init() {
 		if (this.name) {
 			this.icnSub = this.iconReg.getSvgByName(this.name).subscribe(this.initSvg.bind(this));
-			return;
-		}
-		if (this.src) {
+		} else if (this.src) {
 			this.icnSub = this.iconReg.loadSvg(this.src).subscribe(this.initSvg.bind(this));
 		}
 	}
 
-	private initSvg(svg: SVGElement) : void {
+	private initSvg(svg: SVGElement): void {
 		this.setSvg(svg);
 		this.resetDiffer();
 	}
@@ -98,7 +97,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	private setSvg(svg: SVGElement) {
 		if (svg) {
 			this.svg = svg;
-			const icon = <SVGElement>svg.cloneNode(true);
+			const icon = svg.cloneNode(true) as SVGElement;
 			const elem = this.element.nativeElement;
 
 			if (this.applyCss) {
@@ -114,7 +113,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	private copyNgContentAttribute(hostElem: any, icon: SVGElement) {
-		const attributes = <NamedNodeMap>hostElem.attributes;
+		const attributes = hostElem.attributes as NamedNodeMap;
 		const len = attributes.length;
 		for (let i = 0; i < len; i += 1) {
 			const attribute = attributes.item(i);

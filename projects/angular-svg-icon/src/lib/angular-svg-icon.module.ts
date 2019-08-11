@@ -26,6 +26,6 @@ export class AngularSvgIconModule {
 				config.loader || { provide: SvgLoader, useClass: SvgHttpLoader },
 				SVG_ICON_REGISTRY_PROVIDER
 			]
-		}
+		};
 	}
 }

@@ -22,6 +22,10 @@ button:hover {
 	text-decoration: none;
 }
 
+input {
+	margin: 0 12px 0 4px;
+}
+
 .explain {
 	max-width: 500px;
 	font-size: 14px;
@@ -46,11 +50,6 @@ svg-icon.blue {
 	width: 90px;
 	float: left;
 	margin-left: 20px;
-}
-
-svg-icon.inline {
-	fill: black;
-	width: 14px;
 }
 
 pre {
