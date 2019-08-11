@@ -4,9 +4,9 @@ import { SvgIconRegistryService } from 'angular-svg-icon';
 
 
 @Component({
-	selector: 'demo-app',
-	styleUrls: [ 'app/demo-app.component.css' ],
-	templateUrl: 'app/demo-app.component.html'
+	selector: 'app-demo',
+	styleUrls: [ './demo-app.component.scss' ],
+	templateUrl: './demo-app.component.html'
 })
 
 export class DemoAppComponent {
@@ -25,19 +25,19 @@ export class DemoAppComponent {
 	border = false;
 	display = true;
 
-	img = [ 'images/eye.svg', 'images/moon-o.svg' ];
+	img = [ 'assets/images/eye.svg', 'assets/images/moon-o.svg' ];
 	onImg = 0;
 	message = '';
 
-	constructor(private registry:SvgIconRegistryService) {
+	constructor(private registry: SvgIconRegistryService) {
 	}
 
-	getStyle() :string {
+	getStyle(): string {
 		return JSON.stringify(this.getNgStyle()).replace(/\"/g, '\'');
 	}
 
 	getNgStyle() {
-		const style:any = {};
+		const style: any = {};
 
 		if (!this.autoheight) {
 			style['height.px'] = this.h;
@@ -68,7 +68,7 @@ export class DemoAppComponent {
 		return style;
 	}
 
-	unload(url:string) {
+	unload(url: string) {
 		if (this.display) {
 			this.display = false;
 			this.registry.unloadSvg(url);

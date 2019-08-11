@@ -14,11 +14,12 @@ export class SvgIconRegistryService {
 	private iconsByUrl = new Map<string, SVGElement>();
 	private iconsLoadingByUrl = new Map<string, Observable<SVGElement>>();
 
-	constructor(private loader: SvgLoader,
-				@Inject(PLATFORM_ID) private platformId: Object,
-				@Optional() @Inject(SERVER_URL) protected serverUrl: string,
-				@Optional() @Inject(DOCUMENT) private _document: any) {
-			this.document = this._document;
+	constructor(
+		private loader: SvgLoader,
+		@Inject(PLATFORM_ID) private platformId: Object,
+		@Optional() @Inject(SERVER_URL) protected serverUrl: string,
+		@Optional() @Inject(DOCUMENT) private _document: any) {
+		this.document = this._document;
 	}
 
 	/** Add a SVG to the registry by passing a name and the SVG. */
@@ -26,13 +27,13 @@ export class SvgIconRegistryService {
 		if (!this.iconsByUrl.has(name)) {
 			const div = this.document.createElement('DIV');
 			div.innerHTML = data;
-			const svg = <SVGElement>div.querySelector('svg');
+			const svg = div.querySelector('svg') as SVGElement;
 			this.iconsByUrl.set(name, svg);
 		}
 	}
 
 	/** Load a SVG to the registry from a URL. */
-	loadSvg(url: string, name: string = url) : Observable<SVGElement> {
+	loadSvg(url: string, name: string = url): Observable<SVGElement> {
 
 		// not sure if there should be a possibility to use name for server usage
 		// so overriding it for now if provided
@@ -47,11 +48,11 @@ export class SvgIconRegistryService {
 		} else if (this.iconsLoadingByUrl.has(name)) {
 			return this.iconsLoadingByUrl.get(name);
 		}
-		const o = <Observable<SVGElement>> this.loader.getSvg(url).pipe(
+		const o = this.loader.getSvg(url).pipe(
 			map(svg => {
 				const div = this.document.createElement('DIV');
 				div.innerHTML = svg;
-				return <SVGElement>div.querySelector('svg');
+				return div.querySelector('svg') as SVGElement;
 			}),
 			tap (svg => this.iconsByUrl.set(name, svg) ),
 			catchError(err => {
@@ -60,14 +61,14 @@ export class SvgIconRegistryService {
 			}),
 			finalize(() => this.iconsLoadingByUrl.delete(name) ),
 			share()
-		);
+		) as Observable<SVGElement>;
 
 		this.iconsLoadingByUrl.set(name, o);
 		return o;
 	}
 
 	/** Get loaded SVG from registry by name. (also works by url because of blended map) */
-	getSvgByName(name: string) : Observable<SVGElement> {
+	getSvgByName(name: string): Observable<SVGElement> {
 		if (this.iconsByUrl.has(name)) {
 			return observableOf(this.iconsByUrl.get(name));
 		} else if (this.iconsLoadingByUrl.has(name)) {
@@ -84,8 +85,12 @@ export class SvgIconRegistryService {
 	}
 }
 
-export function SVG_ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry: SvgIconRegistryService, loader: SvgLoader,
-	platformId: Object, serverUrl?: string, document?: any) {
+export function SVG_ICON_REGISTRY_PROVIDER_FACTORY(
+		parentRegistry: SvgIconRegistryService,
+		loader: SvgLoader,
+		platformId: object,
+		serverUrl?: string,
+		document?: any) {
 	return parentRegistry || new SvgIconRegistryService(loader, platformId,  serverUrl, document);
 }
 
