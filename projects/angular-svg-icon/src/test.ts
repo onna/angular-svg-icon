@@ -4,16 +4,16 @@ import 'zone.js/dist/zone';
 import 'zone.js/dist/zone-testing';
 import { getTestBed } from '@angular/core/testing';
 import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting
+	BrowserDynamicTestingModule,
+	platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 
 declare const require: any;
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting()
+	BrowserDynamicTestingModule,
+	platformBrowserDynamicTesting()
 );
 // Then we find all the tests.
 const context = require.context('./', true, /\.spec\.ts$/);
@@ -29,10 +29,10 @@ context.keys().map(context);
  * supposing we hace the class MyService like:
  *
  * class MyService {
- *    public factor = 10;
- *    add(a: number,b:number): number{
- *      return a + b;
- *    }
+ *   public factor = 10;
+ *   add(a: number,b:number): number {
+ *     return a + b;
+ *   }
  * }
  *
  * In our test we can declare our jasmine spy this way:
@@ -43,7 +43,7 @@ context.keys().map(context);
  * but factory stills declared as number
  */
 export type Spied<T> = {
-  -readonly [Key in keyof T]: T[Key] extends ((...args: any[]) => any)
-    ? jasmine.Spy
-    : T[Key]
+	-readonly [Key in keyof T]: T[Key] extends ((...args: any[]) => any)
+		? jasmine.Spy
+		: T[Key]
 };

@@ -3,7 +3,7 @@
 Angular SVG Icon
 =========
 
-The **angular-svg-icon** is an Angular 8 service and component that provides a
+The **angular-svg-icon** is an Angular 9 service and component that provides a
 means to inline SVG files to allow for them to be easily styled by CSS and code.
 
 The service provides an icon registery that loads and caches a SVG indexed by
@@ -14,10 +14,15 @@ inner HTML.
 This [demo](https://czeckd.github.io/angular-svg-icon/) shows this module in action.
 
 ## How to use?
+
+Note: **Breaking change** as of angular-svg-icon@9.0.0, an explicit call to ``forRoot()``
+must be made on the module's import.
+
 ```
 $ npm i angular-svg-icon --save
 ```
 **Note on earlier versions of Angular:** 
+- For Angular 8, use angular-svg-icon@8.0.0
 - For Angular 7, use angular-svg-icon@7.2.1
 - For Angular 6, use angular-svg-icon@6.0.0
 - For Angular 4.3 through Angular 5.x, use angular-svg-icon@5.1.1
@@ -44,10 +49,9 @@ export class AppModule {}
 ### Use with Lazy Loading Feature Modules
 
 Recommended usage pattern is to import ``AngularSvgIconModule.forRoot`` in the root AppModule of your application.
-This will allow for one ``SvgIconRegistryService`` to be shared across all modules.
-If, for some reason, a lazily loaded module needs encapuslation of the service, then it is possible to load the 
-``AngularSvgIconModule.forRoot`` in each lazy loaded module, but such usage precludes loading the package in the root
-AppModule.
+This will allow for one ``SvgIconRegistryService`` to be shared across all modules. If, for some reason, a lazily
+loaded module needs encapuslation of the service, then it is possible to load the 
+``AngularSvgIconModule.forRoot`` in each lazy loaded module too, but not recommended.
 
 ## Usage
 Basic usage is:
@@ -230,13 +234,13 @@ size the SVG.
 
 ## Background
 
-The svg-icon is an Angular 2 component that allows for the continuation of the
+The svg-icon is an Angular component that allows for the continuation of the
 AngularJS method for easily inlining SVGs explained by [Ben
 Markowitz](https://www.mobomo.com/2014/09/angular-js-svg/) and others. Including
 the SVG source inline allows for the graphic to be easily styled by CSS.
 
 The technique made use of ng-include to inline the svg source into the document.
-Angular 2, however, drops the support of ng-include, so this is my work-around
+Angular 2, however, dropped the support of ng-include, so this was my work-around
 method.
 
 *Note:* The [icon

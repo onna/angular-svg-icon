@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule, Optional, Provider, SkipSelf } from '@angular/core';
+import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SVG_ICON_REGISTRY_PROVIDER } from './svg-icon-registry.service';
@@ -20,13 +20,7 @@ export interface AngularSvgIconConfig {
 })
 export class AngularSvgIconModule {
 
-	constructor(@Optional() @SkipSelf() parentModule?: AngularSvgIconModule) {
-		if (parentModule) {
-			throw new Error('AngularSvgIconModule is already loaded. Import in the AppModule only.');
-		}
-	}
-
-	static forRoot(config: AngularSvgIconConfig = {}): ModuleWithProviders {
+	static forRoot(config: AngularSvgIconConfig = {}): ModuleWithProviders<AngularSvgIconModule> {
 		return {
 			ngModule: AngularSvgIconModule,
 			providers: [

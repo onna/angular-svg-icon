@@ -16,8 +16,8 @@ describe('SvgHttpLoader', () => {
 	describe('getSvg', () => {
 		it ('should return SVG',
 			inject(
-    			[ HttpTestingController, SvgHttpLoader ],
-      			( httpMock: HttpTestingController, loader: SvgHttpLoader) => {
+				[ HttpTestingController, SvgHttpLoader ],
+				( httpMock: HttpTestingController, loader: SvgHttpLoader) => {
 
 					loader.getSvg('svg').subscribe( data => {
 						expect(data).toBe(SVG);

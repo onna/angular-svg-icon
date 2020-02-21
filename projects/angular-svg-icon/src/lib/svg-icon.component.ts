@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input,
+import { ChangeDetectorRef, Component, DoCheck, ElementRef, Input,
 	KeyValueChangeRecord, KeyValueChanges, KeyValueDiffer, KeyValueDiffers,
 	OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 
