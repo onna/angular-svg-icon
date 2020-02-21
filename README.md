@@ -35,11 +35,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 @NgModule({
-  imports: [ HttpClientModule, AngularSvgIconModule ],
+  imports: [ HttpClientModule, AngularSvgIconModule.forRoot() ],
   ...
 })
 export class AppModule {}
 ```
+
+### Use with Lazy Loading Feature Modules
+
+Recommended usage pattern is to import ``AngularSvgIconModule.forRoot`` in the root AppModule of your application.
+This will allow for one ``SvgIconRegistryService`` to be shared across all modules.
+If, for some reason, a lazily loaded module needs encapuslation of the service, then it is possible to load the 
+``AngularSvgIconModule.forRoot`` in each lazy loaded module, but such usage precludes loading the package in the root
+AppModule.
+
 ## Usage
 Basic usage is:
 ```html
