@@ -15,9 +15,6 @@ This [demo](https://czeckd.github.io/angular-svg-icon/) shows this module in act
 
 ## How to use?
 
-Note: **Breaking change** as of angular-svg-icon@9.0.0, an explicit call to ``forRoot()``
-must be made on the module's import.
-
 ```
 $ npm i angular-svg-icon --save
 ```
@@ -46,12 +43,16 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 export class AppModule {}
 ```
 
+**BREAKINIG CHANGE**: as of angular-svg-icon@9.0.0, an explicit call to `forRoot()`
+must be made on the module's import.
+
 ### Use with Lazy Loading Feature Modules
 
-Recommended usage pattern is to import ``AngularSvgIconModule.forRoot`` in the root AppModule of your application.
-This will allow for one ``SvgIconRegistryService`` to be shared across all modules. If, for some reason, a lazily
-loaded module needs encapuslation of the service, then it is possible to load the 
-``AngularSvgIconModule.forRoot`` in each lazy loaded module too, but not recommended.
+Recommended usage pattern is to import `AngularSvgIconModule.forRoot()` in the root AppModule of your application.
+This will allow for one `SvgIconRegistryService` to be shared across all modules.
+If, for some reason, a lazily loaded module needs encapuslation of the service, then it is possible to load the 
+`AngularSvgIconModule.forRoot` in each lazy loaded module, but such usage precludes loading the package in the root
+AppModule.
 
 ## Usage
 Basic usage is:
@@ -79,7 +80,7 @@ The following attributes can be set on svg-icon:
 - **[stretch]** - A boolean (default is false) that, when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
 
 Programatic interaction with the registry is also possible.
-Include the ``private iconReg:SvgIconRegistryService`` in the constructor:
+Include the `private iconReg: SvgIconRegistryService` in the constructor:
 ```typescript
 constructor(private iconReg:SvgIconRegistryService) { }
 ```
@@ -97,7 +98,7 @@ To preload a SVG file from a URL into the registry with predefined name:
 ```typescript
 {
   ...
-  this.iconReg.loadSvg('foo.svg', 'foo');
+  this.iconReg.loadSvg('foo.svg', 'foo').subscribe();
 }
 ```
 To add a SVG from a string:
