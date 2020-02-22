@@ -10,21 +10,22 @@ export interface AngularSvgIconConfig {
 }
 
 @NgModule({
-	imports:	  [
+	imports: [
 		CommonModule,
 	],
-	declarations: [ SvgIconComponent ],
-	providers:    [ SVG_ICON_REGISTRY_PROVIDER, { provide: SvgLoader, useClass: SvgHttpLoader } ],
-	exports:      [ SvgIconComponent ]
+	declarations: [
+		SvgIconComponent
+	],
+	exports: [ SvgIconComponent ]
 })
 export class AngularSvgIconModule {
 
-	static forRoot(config: AngularSvgIconConfig = {}): ModuleWithProviders {
+	static forRoot(config: AngularSvgIconConfig = {}): ModuleWithProviders<AngularSvgIconModule> {
 		return {
 			ngModule: AngularSvgIconModule,
 			providers: [
-				config.loader || { provide: SvgLoader, useClass: SvgHttpLoader },
-				SVG_ICON_REGISTRY_PROVIDER
+				SVG_ICON_REGISTRY_PROVIDER,
+				config.loader || { provide: SvgLoader, useClass: SvgHttpLoader }
 			]
 		};
 	}

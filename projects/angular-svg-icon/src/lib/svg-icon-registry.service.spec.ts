@@ -9,8 +9,8 @@ import { SvgIconRegistryService } from './svg-icon-registry.service';
 
 describe('SvgIconRegistryService', () => {
 	let service: SvgIconRegistryService;
-	let mockSvgLoader = jasmine.createSpyObj( ['getSvg'] );
-	let serverUrl: string = 'localhost';
+	const mockSvgLoader = jasmine.createSpyObj( ['getSvg'] );
+	const serverUrl = 'localhost';
 	let document: Document;
 
 	const SVG = `<svg viewBox="0 0 5 5" xmlns="http://www.w3.org/2000/svg"><path d="M2 1 h1 v1 h1 v1 h-1 v1 h-1 v-1 h-1 v-1 h1 z" /></svg>`;
@@ -23,7 +23,7 @@ describe('SvgIconRegistryService', () => {
 			]
 		});
 
-		document = TestBed.get(DOCUMENT);
+		document = TestBed.inject(DOCUMENT);
 
 	});
 
