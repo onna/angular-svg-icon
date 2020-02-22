@@ -77,8 +77,19 @@ The following attributes can be set on svg-icon:
 - **src** - The path to SVG.
 - **name** - An optional name of SVG, under which it was loaded via SvgIconRegistryService.
 - **[svgStyle]** - Styles to be applied to the SVG, this is based on the familiar [ngStyle].
-- **[stretch]** - A boolean (default is false) that, when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
+- **[stretch]** - A boolean (default is false) that when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
+- **[applyCss]** - A boolean that when true, extends the css into the loaded SVG. 
 
+### Using Apply CSS
+
+Using `[applyCss]="true"`, elements inside the svg (path, polygon, etc.) can be extended via component CSS an
+apply animations. This works even if inner elements have declared attributes.
+
+```html
+<svg-icon [applyCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
+```
+
+### Using the Svg-Icon Registry
 Programatic interaction with the registry is also possible.
 Include the `private iconReg: SvgIconRegistryService` in the constructor:
 ```typescript
@@ -116,15 +127,6 @@ To unload a SVG from the registry.
   ...
   this.iconReg.unloadSvg('foo.svg');
 }
-```
-
-### Apply CSS
-
-Using `[applyCss]="true"`, elements inside the svg (path, polygon, etc.) can be extended via component CSS an
-apply animations. This works even if inner elements have declared attributes.
-
-```html
-<svg-icon [applyCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
 ```
 
 ## Usage with Angular Universal
