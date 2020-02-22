@@ -43,7 +43,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 export class AppModule {}
 ```
 
-**BREAKINIG CHANGE**: as of angular-svg-icon@9.0.0, an explicit call to `forRoot()`
+**BREAKING CHANGE**: as of angular-svg-icon@9.0.0, an explicit call to `forRoot()`
 must be made on the module's import.
 
 ### Use with Lazy Loading Feature Modules
@@ -51,7 +51,7 @@ must be made on the module's import.
 Recommended usage pattern is to import `AngularSvgIconModule.forRoot()` in the root AppModule of your application.
 This will allow for one `SvgIconRegistryService` to be shared across all modules.
 If, for some reason, a lazily loaded module needs encapuslation of the service, then it is possible to load the 
-`AngularSvgIconModule.forRoot` in each lazy loaded module, but such usage precludes loading the package in the root
+`AngularSvgIconModule.forRoot()` in each lazy loaded module, but such usage precludes loading the package in the root
 AppModule.
 
 ## Usage
@@ -118,7 +118,7 @@ To unload a SVG from the registry.
 }
 ```
 
-## Apply CSS
+### Apply CSS
 
 Using `[applyCss]="true"`, elements inside the svg (path, polygon, etc.) can be extended via component CSS an
 apply animations. This works even if inner elements have declared attributes.
