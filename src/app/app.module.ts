@@ -7,7 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DemoAppComponent } from './demo-app.component';
 
 @NgModule({
-	imports:         [ BrowserModule, FormsModule, HttpClientModule, AngularSvgIconModule ],
+	imports:         [ BrowserModule, FormsModule, HttpClientModule, AngularSvgIconModule.forRoot() ],
 	declarations:    [ DemoAppComponent ],
 	bootstrap:       [ DemoAppComponent ]
 
