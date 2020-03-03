@@ -14,7 +14,10 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() src: string;
 	@Input() name: string;
 	@Input() stretch = false;
+	/** @deprecated since 9.1.0 */
 	@Input() applyCss = false;
+	@Input() svgClass: string;
+	@Input('class') klass: string;
 
 	// Adapted from ngStyle
 	@Input()
@@ -55,6 +58,15 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		}
 		if (changeRecord.stretch) {
 			this.stylize();
+		}
+		if (changeRecord.svgClass) {
+			this.setClass(changeRecord.svgClass.previousValue, changeRecord.svgClass.currentValue);
+		}
+		if (changeRecord.klass) {
+			this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+		}
+		if (changeRecord.applyCss) {
+			console.warn('applyCss deprecated since 9.1.0, will be removed in 10.0.0');
 		}
 	}
 
@@ -104,8 +116,11 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			const icon = svg.cloneNode(true) as SVGElement;
 			const elem = this.element.nativeElement;
 
-			if (this.applyCss) {
-				this.copyNgContentAttribute(elem, icon);
+			this.copyNgContentAttribute(elem, icon);
+			this.renderer.setAttribute(icon, 'class', this.klass);
+
+			if (this.svgClass) {
+				this.renderer.setAttribute(icon, 'class', this.svgClass);
 			}
 
 			elem.innerHTML = '';
@@ -166,6 +181,18 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			this.renderer.setStyle(svg, name, value as string);
 		} else {
 			this.renderer.removeStyle(svg, name);
+		}
+	}
+
+	private setClass(previous: string, current: string) {
+		const svg = this.element.nativeElement.firstChild;
+		if (svg) {
+			if (previous) {
+				this.renderer.removeClass(svg, previous);
+			}
+			if (current) {
+				this.renderer.addClass(svg, current);
+			}
 		}
 	}
 }
