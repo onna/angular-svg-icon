@@ -80,7 +80,7 @@ The following attributes can be set on svg-icon:
 - **[stretch]** - An optional boolean (default is false) that when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
 - **[class]** - An optional string of the class or classes to apply to the SVG (duplicates what is set on the `svg-icon)`.
 - **[svgClass]** - An optional string of the class or classes to apply to the SVG (independent of what is set for the class on the `svg-icon`).
-- **[viewBox]** - An optional string to set the viewBox on the SVG. If the `viewBox="auto"`, then `svg-icon` will attempt to convert the SVG's width and height attributes to a `viewBox="0 0 w h"`.
+- **[viewBox]** - An optional string to set the viewBox on the SVG. If the `viewBox="auto"`, then `svg-icon` will attempt to convert the SVG's width and height attributes to a `viewBox="0 0 w h"`. Both explicitly setting the viewBox or `auto` setting the viewBox will remove the SVG's width and height attributes.
 
 ### Using the Svg-Icon Registry
 Programatic interaction with the registry is also possible.
