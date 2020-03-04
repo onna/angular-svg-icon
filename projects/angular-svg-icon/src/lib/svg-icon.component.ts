@@ -17,7 +17,9 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	/** @deprecated since 9.1.0 */
 	@Input() applyCss = false;
 	@Input() svgClass: string;
+	// tslint:disable-next-line:no-input-rename
 	@Input('class') klass: string;
+	@Input() viewBox: string;
 
 	// Adapted from ngStyle
 	@Input()
@@ -32,6 +34,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	private icnSub: Subscription;
 	private differ: KeyValueDiffer<string, string|number>;
 	private _svgStyle: {[key: string]: string};
+	private loaded = false;
 
 	constructor(
 		private element: ElementRef,
@@ -51,7 +54,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 
 	ngOnChanges(changeRecord: SimpleChanges) {
 		if (changeRecord.src || changeRecord.name) {
-			if (this.svg) {
+			if (this.loaded) {
 				this.destroy();
 			}
 			this.init();
@@ -64,6 +67,12 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		}
 		if (changeRecord.klass) {
 			this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+		}
+		if (changeRecord.viewBox) {
+			if (this.loaded) {
+				this.destroy();
+			}
+			this.init();
 		}
 		if (changeRecord.applyCss) {
 			console.warn('applyCss deprecated since 9.1.0, will be removed in 10.0.0');
@@ -92,13 +101,16 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	private initSvg(svg: SVGElement): void {
-		this.setSvg(svg);
-		this.resetDiffer();
+		if (!this.loaded) {
+			this.setSvg(svg);
+			this.resetDiffer();
+		}
 	}
 
 	private destroy() {
 		this.svg = undefined;
 		this.differ = undefined;
+		this.loaded = false;
 		if (this.icnSub) {
 			this.icnSub.unsubscribe();
 		}
@@ -111,7 +123,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	private setSvg(svg: SVGElement) {
-		if (svg) {
+		if (!this.loaded && svg) {
 			this.svg = svg;
 			const icon = svg.cloneNode(true) as SVGElement;
 			const elem = this.element.nativeElement;
@@ -123,8 +135,27 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 				this.renderer.setAttribute(icon, 'class', this.svgClass);
 			}
 
+			if (this.viewBox) {
+				if (this.viewBox === 'auto') {
+					// Attempt to convert height & width to a viewBox.
+					const h = icon.getAttribute('height');
+					const w = icon.getAttribute('width');
+					if (h && w) {
+						const vb = `0 0 ${h} ${w}`;
+						this.renderer.setAttribute(icon, 'viewBox', vb);
+						this.renderer.removeAttribute(icon, 'height');
+						this.renderer.removeAttribute(icon, 'width');
+					}
+				} else if (this.viewBox !== '') {
+					this.renderer.setAttribute(icon, 'viewBox', this.viewBox);
+					this.renderer.removeAttribute(icon, 'height');
+					this.renderer.removeAttribute(icon, 'width');
+				}
+			}
+
 			elem.innerHTML = '';
 			this.renderer.appendChild(elem, icon);
+			this.loaded = true;
 
 			this.stylize();
 			this.cdr.markForCheck();
