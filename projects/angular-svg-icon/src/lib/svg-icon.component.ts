@@ -138,18 +138,18 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			if (this.viewBox) {
 				if (this.viewBox === 'auto') {
 					// Attempt to convert height & width to a viewBox.
-					const h = icon.getAttribute('height');
 					const w = icon.getAttribute('width');
+					const h = icon.getAttribute('height');
 					if (h && w) {
-						const vb = `0 0 ${h} ${w}`;
+						const vb = `0 0 ${w} ${h}`;
 						this.renderer.setAttribute(icon, 'viewBox', vb);
-						this.renderer.removeAttribute(icon, 'height');
 						this.renderer.removeAttribute(icon, 'width');
+						this.renderer.removeAttribute(icon, 'height');
 					}
 				} else if (this.viewBox !== '') {
 					this.renderer.setAttribute(icon, 'viewBox', this.viewBox);
-					this.renderer.removeAttribute(icon, 'height');
 					this.renderer.removeAttribute(icon, 'width');
+					this.renderer.removeAttribute(icon, 'height');
 				}
 			}
 
