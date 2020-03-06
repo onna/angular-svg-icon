@@ -76,18 +76,11 @@ More complex styling can be applied to the svg, for example:
 The following attributes can be set on svg-icon:
 - **src** - The path to SVG.
 - **name** - An optional name of SVG, under which it was loaded via SvgIconRegistryService.
-- **[svgStyle]** - Styles to be applied to the SVG, this is based on the familiar [ngStyle].
-- **[stretch]** - A boolean (default is false) that when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
-- **[applyCss]** - A boolean that when true, extends the css into the loaded SVG. 
-
-### Using Apply CSS
-
-Using `[applyCss]="true"`, elements inside the svg (path, polygon, etc.) can be extended via component CSS an
-apply animations. This works even if inner elements have declared attributes.
-
-```html
-<svg-icon [applyCss]="true" src="images/multi_path.svg" class="multi-path-svg animated"></svg-icon>
-```
+- **[svgStyle]** - Optional styles to be applied to the SVG, this is based on the familiar [ngStyle].
+- **[stretch]** - An optional boolean (default is false) that when true, sets `preserveAspectRatio="none"` on the SVG. This is useful for setting both the height and width styles to strech *or* distort the svg.
+- **[class]** - An optional string of the class or classes to apply to the SVG (duplicates what is set on the `svg-icon)`.
+- **[svgClass]** - An optional string of the class or classes to apply to the SVG (independent of what is set for the class on the `svg-icon`).
+- **[viewBox]** - An optional string to set the viewBox on the SVG. If the `viewBox="auto"`, then `svg-icon` will attempt to convert the SVG's width and height attributes to a `viewBox="0 0 w h"`. Both explicitly setting the viewBox or `auto` setting the viewBox will remove the SVG's width and height attributes.
 
 ### Using the Svg-Icon Registry
 Programatic interaction with the registry is also possible.

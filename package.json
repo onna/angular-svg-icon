@@ -1,7 +1,7 @@
 {
   "name": "svg-icon",
   "description": "Angular 9 component for inlining SVGs allowing them to be easily styled with CSS.",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/czeckd/angular-svg-icon.git"
@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --prod",
     "build": "ng build",
     "dist": "ng build --prod angular-svg-icon && cp README.md LICENSE ./dist/angular-svg-icon/",
     "test": "ng test --source-map=false angular-svg-icon",
