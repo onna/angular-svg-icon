@@ -64,7 +64,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			this.stylize();
 		}
 
-		if (changeRecord.applyClass && this.klass) {
+		if (changeRecord.applyClass) {
 			if (this.applyClass) {
 				this.setClass(null, this.klass);
 			} else {
@@ -75,9 +75,15 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		if (changeRecord.svgClass) {
 			this.setClass(changeRecord.svgClass.previousValue, changeRecord.svgClass.currentValue);
 		}
-		if (changeRecord.klass && !this.svgClass && this.applyClass) {
-			this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+
+		if (changeRecord.klass) {
+			if (this.applyClass) {
+				this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+			} else {
+				this.setClass(changeRecord.klass.previousValue, null);
+			}
 		}
+
 		if (changeRecord.viewBox) {
 			if (this.loaded) {
 				this.destroy();

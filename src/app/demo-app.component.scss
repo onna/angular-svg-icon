@@ -32,21 +32,30 @@ input {
 }
 
 
-svg-icon.red {
+.red {
 	fill: red;
+}
+
+svg-icon.red {
 	width: 90px;
 	float: left;
 }
 
-svg-icon.green {
+.green {
 	fill: green;
+}
+
+svg-icon.green {
 	width: 90px;
 	float: left;
 	margin-left: 20px;
 }
 
-svg-icon.blue {
+.blue {
 	fill: blue;
+}
+
+svg-icon.blue {
 	width: 90px;
 	float: left;
 	margin-left: 20px;
@@ -117,4 +126,33 @@ span.px:after {
 code {
 	background: whitesmoke;
 	padding: 5px;
+}
+
+.bulb {
+	min-width: 100px;
+	max-width: 100px;
+	min-height: 100px;
+	max-height: 100px;
+	border: 1px solid gray;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+}
+
+select {
+	margin-right: 6px;
+	min-width: 80px;
+}
+
+.small {
+	width: 40px;
+}
+
+.medium {
+	width: 60px;
+}
+
+.large {
+	width: 80px;
 }

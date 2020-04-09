@@ -62,8 +62,37 @@
 	</div>
 
 	<div class="explain">
+		<h2>Working with CSS classes</h2>
+
+		<p>There are two ways to apply a CSS class to the SVG loaded by the &lt;svg&#8209;icon&gt;. The first way
+		is to use the svgClass attribute to apply a class directly to the SVG. The second way is to apply the
+		&lt;svg&#8209;icon&gt; class attribute in conjuction with the applyClass="true" attribute. The two ways
+		also may be combined. The first way applies the class only to the SVG. The second way duplicates the class
+		from the &lt;svg&#8209;icon&gt; and applies it also to the SVG.</p>
+
+		<div class="bulb">
+			<svg-icon src="assets/images/lightbulb.svg" [svgClass]="svgKlass" [class]="klass" [applyClass]="applied"></svg-icon>
+		</div>
+
+		<pre>&lt;svg-icon src="assets/images/lightbulb.svg" [svgClass]="{{svgKlass}}"
+  [class]="{{klass}}" [applyClass]="{{applied|json}}"&gt;
+&lt;/svg-icon&gt;</pre>
+
+		<select [(ngModel)]="svgKlass">
+			<option *ngFor="let c of svgKlasses" [value]="c">{{c}}</option>
+		</select>
+
+		<select [(ngModel)]="klass">
+			<option *ngFor="let c of klasses" [value]="c">{{c}}</option>
+		</select>
+
+		<button (click)="applied = !applied">{{applied ? 'ignore class' : 'apply class'}}</button>
+	</div>
+
+
+	<div class="explain">
 		<h2>Apply class to different SVG parts</h2>
-		<p>Elements inside the SVG (path, polygon, etc.) can be extended via the class attribte of the &lt;svg&#8209;icon&gt;
+		<p>Elements inside the SVG (path, polygon, etc.) can be extended via the class attribute of the &lt;svg&#8209;icon&gt;
 		to apply animations. This works even if inner elements have declared attributes.</p>
 
 		<p>Hover over image to see animation:</p>
