@@ -24,6 +24,12 @@ export class DemoAppComponent {
 	stretch = false;
 	border = false;
 	display = true;
+	klasses = [ '', 'red', 'green', 'blue' ];
+	klass = this.klasses[0];
+	svgKlasses = [ '', 'small', 'medium', 'large' ];
+	svgKlass = this.svgKlasses[0];;
+	applied = false;
+
 
 	img = [ 'assets/images/eye.svg', 'assets/images/moon-o.svg' ];
 	onImg = 0;

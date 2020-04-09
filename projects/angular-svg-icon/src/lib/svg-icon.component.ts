@@ -14,6 +14,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() src: string;
 	@Input() name: string;
 	@Input() stretch = false;
+	@Input() applyClass = false;
 	/** @deprecated since 9.1.0 */
 	@Input() applyCss = false;
 	@Input() svgClass: string;
@@ -62,12 +63,27 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		if (changeRecord.stretch) {
 			this.stylize();
 		}
+
+		if (changeRecord.applyClass) {
+			if (this.applyClass) {
+				this.setClass(null, this.klass);
+			} else {
+				this.setClass(this.klass, null);
+			}
+		}
+
 		if (changeRecord.svgClass) {
 			this.setClass(changeRecord.svgClass.previousValue, changeRecord.svgClass.currentValue);
 		}
+
 		if (changeRecord.klass) {
-			this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+			if (this.applyClass) {
+				this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+			} else {
+				this.setClass(changeRecord.klass.previousValue, null);
+			}
 		}
+
 		if (changeRecord.viewBox) {
 			if (this.loaded) {
 				this.destroy();
@@ -76,6 +92,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		}
 		if (changeRecord.applyCss) {
 			console.warn('applyCss deprecated since 9.1.0, will be removed in 10.0.0');
+			console.warn('use applyClass instead');
 		}
 	}
 
@@ -128,8 +145,12 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			const icon = svg.cloneNode(true) as SVGElement;
 			const elem = this.element.nativeElement;
 
+
 			this.copyNgContentAttribute(elem, icon);
-			this.renderer.setAttribute(icon, 'class', this.klass);
+
+			if (this.klass && this.applyClass) {
+				this.renderer.setAttribute(icon, 'class', this.klass);
+			}
 
 			if (this.svgClass) {
 				this.renderer.setAttribute(icon, 'class', this.svgClass);
