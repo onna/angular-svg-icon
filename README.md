@@ -83,8 +83,8 @@ The following attributes can be set on svg-icon:
 - **[svgClass]** - An optional string of the class or classes to apply to the SVG (independent of what is set for the class on the `svg-icon`).
 - **[viewBox]** - An optional string to set the viewBox on the SVG. If the `viewBox="auto"`, then `svg-icon` will attempt to convert the SVG's width and height attributes to a `viewBox="0 0 w h"`. Both explicitly setting the viewBox or `auto` setting the viewBox will remove the SVG's width and height attributes.
 
-Deprecated:.
-- **[applyCss]** - This has been renamed as **[applyClass]** (as of v9.1.0).
+Deprecated attribus:
+- **[applyCss]** - Renamed as **[applyClass]** (as of v9.2.0).
 
 
 ### Using the Svg-Icon Registry
