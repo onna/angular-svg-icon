@@ -79,10 +79,16 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		if (changeRecord.klass) {
 			const elem = this.element.nativeElement;
 			if (changeRecord.klass.previousValue) {
-				this.renderer.removeClass(elem, changeRecord.klass.previousValue);
+				const klasses = changeRecord.klass.previousValue.split(' ');
+				klasses.forEach( e => {
+					this.renderer.removeClass(elem, e);
+				});
 			}
 			if (changeRecord.klass.currentValue) {
-				this.renderer.addClass(elem, changeRecord.klass.currentValue);
+				const klasses = changeRecord.klass.currentValue.split(' ');
+				klasses.forEach( e => {
+					this.renderer.addClass(elem, e);
+				});
 			}
 
 			if (this.applyClass) {
@@ -248,7 +254,10 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		const svg = this.element.nativeElement.firstChild;
 		if (svg) {
 			if (previous) {
-				this.renderer.removeClass(svg, previous);
+				const klasses = previous.split(' ');
+				for (const k of klasses) {
+					this.renderer.removeClass(svg, k);
+				}
 			}
 			if (current) {
 				const klasses = current.split(' ');
