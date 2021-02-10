@@ -77,6 +77,14 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		}
 
 		if (changeRecord.klass) {
+			const elem = this.element.nativeElement;
+			if (changeRecord.klass.previousValue) {
+				this.renderer.removeClass(elem, changeRecord.klass.previousValue);
+			}
+			if (changeRecord.klass.currentValue) {
+				this.renderer.addClass(elem, changeRecord.klass.currentValue);
+			}
+
 			if (this.applyClass) {
 				this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
 			} else {
