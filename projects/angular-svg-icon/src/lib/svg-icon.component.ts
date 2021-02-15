@@ -24,7 +24,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 
 	// Adapted from ngStyle
 	@Input()
-	set svgStyle(v: {[key: string]: string }) {
+	set svgStyle(v: {[key: string]: any }) {
 		this._svgStyle = v;
 		if (!this.differ && v) {
 			this.differ = this.differs.find(v).create();
@@ -34,7 +34,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	private svg: SVGElement;
 	private icnSub: Subscription;
 	private differ: KeyValueDiffer<string, string|number>;
-	private _svgStyle: {[key: string]: string};
+	private _svgStyle: {[key: string]: any};
 	private loaded = false;
 
 	constructor(
