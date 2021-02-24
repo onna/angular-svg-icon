@@ -17,14 +17,14 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() applyClass = false;
 	/** @deprecated since 9.1.0 */
 	@Input() applyCss = false;
-	@Input() svgClass: string;
+	@Input() svgClass: any;
 	// tslint:disable-next-line:no-input-rename
-	@Input('class') klass: string;
+	@Input('class') klass: any;
 	@Input() viewBox: string;
 
 	// Adapted from ngStyle
 	@Input()
-	set svgStyle(v: {[key: string]: any }) {
+	set svgStyle(v: {[key: string]: any }|null) {
 		this._svgStyle = v;
 		if (!this.differ && v) {
 			this.differ = this.differs.find(v).create();

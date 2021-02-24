@@ -1,7 +1,7 @@
 {
   "name": "svg-icon",
   "description": "Angular 11 component for inlining SVGs allowing them to be easily styled with CSS.",
-  "version": "11.1.2",
+  "version": "11.1.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/czeckd/angular-svg-icon.git"
