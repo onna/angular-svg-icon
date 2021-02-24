@@ -23,6 +23,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() viewBox: string;
 
 	// Adapted from ngStyle
+	// angular/packages/common/src/directives/ng_style.ts
 	@Input()
 	set svgStyle(v: {[key: string]: any }|null) {
 		this._svgStyle = v;
@@ -54,6 +55,8 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	ngOnChanges(changeRecord: SimpleChanges) {
+		const elemSvg = this.element.nativeElement.firstChild;
+
 		if (changeRecord.src || changeRecord.name) {
 			if (this.loaded) {
 				this.destroy();
@@ -66,35 +69,24 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 
 		if (changeRecord.applyClass) {
 			if (this.applyClass) {
-				this.setClass(null, this.klass);
+				this.setClass(elemSvg, null, this.klass);
 			} else {
-				this.setClass(this.klass, null);
+				this.setClass(elemSvg, this.klass, null);
 			}
 		}
 
 		if (changeRecord.svgClass) {
-			this.setClass(changeRecord.svgClass.previousValue, changeRecord.svgClass.currentValue);
+			this.setClass(elemSvg, changeRecord.svgClass.previousValue, changeRecord.svgClass.currentValue);
 		}
 
 		if (changeRecord.klass) {
 			const elem = this.element.nativeElement;
-			if (changeRecord.klass.previousValue) {
-				const klasses = changeRecord.klass.previousValue.split(' ');
-				for (const k of klasses) {
-					this.renderer.removeClass(elem, k);
-				}
-			}
-			if (changeRecord.klass.currentValue) {
-				const klasses = changeRecord.klass.currentValue.split(' ');
-				for (const k of klasses) {
-					this.renderer.addClass(elem, k);
-				}
-			}
+			this.setClass(elem, changeRecord.klass.previousValue, changeRecord.klass.currentValue);
 
 			if (this.applyClass) {
-				this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+				this.setClass(elemSvg, changeRecord.klass.previousValue, changeRecord.klass.currentValue);
 			} else {
-				this.setClass(changeRecord.klass.previousValue, null);
+				this.setClass(elemSvg, changeRecord.klass.previousValue, null);
 			}
 		}
 
@@ -159,15 +151,18 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			const icon = svg.cloneNode(true) as SVGElement;
 			const elem = this.element.nativeElement;
 
+			elem.innerHTML = '';
+			this.renderer.appendChild(elem, icon);
+			this.loaded = true;
 
 			this.copyNgContentAttribute(elem, icon);
 
 			if (this.klass && this.applyClass) {
-				this.renderer.setAttribute(icon, 'class', this.klass);
+				this.setClass(elem.firstChild, null, this.klass);
 			}
 
 			if (this.svgClass) {
-				this.renderer.setAttribute(icon, 'class', this.svgClass);
+				this.setClass(elem.firstChild, null, this.svgClass);
 			}
 
 			if (this.viewBox) {
@@ -187,10 +182,6 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 					this.renderer.removeAttribute(icon, 'height');
 				}
 			}
-
-			elem.innerHTML = '';
-			this.renderer.appendChild(elem, icon);
-			this.loaded = true;
 
 			this.stylize();
 			this.cdr.markForCheck();
@@ -250,19 +241,18 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		}
 	}
 
-	private setClass(previous: string, current: string) {
-		const svg = this.element.nativeElement.firstChild;
-		if (svg) {
+	private setClass(target: HTMLElement|SVGSVGElement, previous: string|string[], current: string|string[]) {
+		if (target) {
 			if (previous) {
-				const klasses = previous.split(' ');
+				const klasses = Array.isArray(previous) ? previous : previous.split(' ');
 				for (const k of klasses) {
-					this.renderer.removeClass(svg, k);
+					this.renderer.removeClass(target, k);
 				}
 			}
 			if (current) {
-				const klasses = current.split(' ');
+				const klasses = Array.isArray(current) ? current : current.split(' ');
 				for (const k of klasses) {
-					this.renderer.addClass(svg, k);
+					this.renderer.addClass(target, k);
 				}
 			}
 		}
