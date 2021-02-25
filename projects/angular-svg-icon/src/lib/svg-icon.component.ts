@@ -22,7 +22,7 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	// tslint:disable-next-line:no-input-rename
 	@Input('class') klass: any;
 	@Input() viewBox: string;
-	@Input() svgAriaLabel;
+	@Input() svgAriaLabel: string;
 
 	// Adapted from ngStyle (see:  angular/packages/common/src/directives/ng_style.ts)
 	@Input()
