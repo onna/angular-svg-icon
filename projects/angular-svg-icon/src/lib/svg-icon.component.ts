@@ -1,3 +1,4 @@
+
 import { ChangeDetectorRef, Component, DoCheck, ElementRef, Input,
 	KeyValueChangeRecord, KeyValueChanges, KeyValueDiffer, KeyValueDiffers,
 	OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
@@ -17,14 +18,15 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	@Input() applyClass = false;
 	/** @deprecated since 9.1.0 */
 	@Input() applyCss = false;
-	@Input() svgClass: string;
+	@Input() svgClass: any;
 	// tslint:disable-next-line:no-input-rename
-	@Input('class') klass: string;
+	@Input('class') klass: any;
 	@Input() viewBox: string;
+	@Input() svgAriaLabel;
 
-	// Adapted from ngStyle
+	// Adapted from ngStyle (see:  angular/packages/common/src/directives/ng_style.ts)
 	@Input()
-	set svgStyle(v: {[key: string]: any }) {
+	set svgStyle(v: {[key: string]: any }|null) {
 		this._svgStyle = v;
 		if (!this.differ && v) {
 			this.differ = this.differs.find(v).create();
@@ -54,6 +56,8 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	}
 
 	ngOnChanges(changeRecord: SimpleChanges) {
+		const elemSvg = this.element.nativeElement.firstChild;
+
 		if (changeRecord.src || changeRecord.name) {
 			if (this.loaded) {
 				this.destroy();
@@ -66,35 +70,24 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 
 		if (changeRecord.applyClass) {
 			if (this.applyClass) {
-				this.setClass(null, this.klass);
+				this.setClass(elemSvg, null, this.klass);
 			} else {
-				this.setClass(this.klass, null);
+				this.setClass(elemSvg, this.klass, null);
 			}
 		}
 
 		if (changeRecord.svgClass) {
-			this.setClass(changeRecord.svgClass.previousValue, changeRecord.svgClass.currentValue);
+			this.setClass(elemSvg, changeRecord.svgClass.previousValue, changeRecord.svgClass.currentValue);
 		}
 
 		if (changeRecord.klass) {
 			const elem = this.element.nativeElement;
-			if (changeRecord.klass.previousValue) {
-				const klasses = changeRecord.klass.previousValue.split(' ');
-				for (const k of klasses) {
-					this.renderer.removeClass(elem, k);
-				}
-			}
-			if (changeRecord.klass.currentValue) {
-				const klasses = changeRecord.klass.currentValue.split(' ');
-				for (const k of klasses) {
-					this.renderer.addClass(elem, k);
-				}
-			}
+			this.setClass(elem, changeRecord.klass.previousValue, changeRecord.klass.currentValue);
 
 			if (this.applyClass) {
-				this.setClass(changeRecord.klass.previousValue, changeRecord.klass.currentValue);
+				this.setClass(elemSvg, changeRecord.klass.previousValue, changeRecord.klass.currentValue);
 			} else {
-				this.setClass(changeRecord.klass.previousValue, null);
+				this.setClass(elemSvg, changeRecord.klass.previousValue, null);
 			}
 		}
 
@@ -107,6 +100,10 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		if (changeRecord.applyCss) {
 			console.warn('applyCss deprecated since 9.1.0, will be removed in 10.0.0');
 			console.warn('use applyClass instead');
+		}
+
+		if (changeRecord.svgAriaLabel) {
+			this.doAria(changeRecord.svgAriaLabel.currentValue);
 		}
 	}
 
@@ -159,15 +156,18 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			const icon = svg.cloneNode(true) as SVGElement;
 			const elem = this.element.nativeElement;
 
+			elem.innerHTML = '';
+			this.renderer.appendChild(elem, icon);
+			this.loaded = true;
 
 			this.copyNgContentAttribute(elem, icon);
 
 			if (this.klass && this.applyClass) {
-				this.renderer.setAttribute(icon, 'class', this.klass);
+				this.setClass(elem.firstChild, null, this.klass);
 			}
 
 			if (this.svgClass) {
-				this.renderer.setAttribute(icon, 'class', this.svgClass);
+				this.setClass(elem.firstChild, null, this.svgClass);
 			}
 
 			if (this.viewBox) {
@@ -188,11 +188,14 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 				}
 			}
 
-			elem.innerHTML = '';
-			this.renderer.appendChild(elem, icon);
-			this.loaded = true;
-
 			this.stylize();
+
+			// If there is not a svgAriaLabel and the SVG has an arial-label, then do not override
+			// the SVG's aria-label.
+			if (!(this.svgAriaLabel === undefined && elem.firstChild.hasAttribute('aria-label'))) {
+				this.doAria(this.svgAriaLabel || '');
+			}
+
 			this.cdr.markForCheck();
 		}
 	}
@@ -250,21 +253,34 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		}
 	}
 
-	private setClass(previous: string, current: string) {
-		const svg = this.element.nativeElement.firstChild;
-		if (svg) {
+	private setClass(target: HTMLElement|SVGSVGElement, previous: string|string[], current: string|string[]) {
+		if (target) {
 			if (previous) {
-				const klasses = previous.split(' ');
+				const klasses = Array.isArray(previous) ? previous : previous.split(' ');
 				for (const k of klasses) {
-					this.renderer.removeClass(svg, k);
+					this.renderer.removeClass(target, k);
 				}
 			}
 			if (current) {
-				const klasses = current.split(' ');
+				const klasses = Array.isArray(current) ? current : current.split(' ');
 				for (const k of klasses) {
-					this.renderer.addClass(svg, k);
+					this.renderer.addClass(target, k);
 				}
 			}
 		}
 	}
+
+	private doAria(label: string) {
+		const svg = this.element.nativeElement.firstChild;
+		if (svg) {
+			if (label === '') {
+				this.renderer.setAttribute(svg, 'aria-hidden', 'true');
+				this.renderer.removeAttribute(svg, 'aria-label');
+			} else {
+				this.renderer.removeAttribute(svg, 'aria-hidden');
+				this.renderer.setAttribute(svg, 'aria-label', label);
+			}
+		}
+	}
+
 }
