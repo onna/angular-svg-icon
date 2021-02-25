@@ -1,3 +1,4 @@
+
 import { ChangeDetectorRef, Component, DoCheck, ElementRef, Input,
 	KeyValueChangeRecord, KeyValueChanges, KeyValueDiffer, KeyValueDiffers,
 	OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
@@ -21,9 +22,9 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 	// tslint:disable-next-line:no-input-rename
 	@Input('class') klass: any;
 	@Input() viewBox: string;
+	@Input() svgAriaLabel;
 
-	// Adapted from ngStyle
-	// angular/packages/common/src/directives/ng_style.ts
+	// Adapted from ngStyle (see:  angular/packages/common/src/directives/ng_style.ts)
 	@Input()
 	set svgStyle(v: {[key: string]: any }|null) {
 		this._svgStyle = v;
@@ -99,6 +100,10 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 		if (changeRecord.applyCss) {
 			console.warn('applyCss deprecated since 9.1.0, will be removed in 10.0.0');
 			console.warn('use applyClass instead');
+		}
+
+		if (changeRecord.svgAriaLabel) {
+			this.doAria(changeRecord.svgAriaLabel.currentValue);
 		}
 	}
 
@@ -184,6 +189,13 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			}
 
 			this.stylize();
+
+			// If there is not a svgAriaLabel and the SVG has an arial-label, then do not override
+			// the SVG's aria-label.
+			if (!(this.svgAriaLabel === undefined && elem.firstChild.hasAttribute('aria-label'))) {
+				this.doAria(this.svgAriaLabel || '');
+			}
+
 			this.cdr.markForCheck();
 		}
 	}
@@ -257,4 +269,18 @@ export class SvgIconComponent implements OnInit, OnDestroy, OnChanges, DoCheck {
 			}
 		}
 	}
+
+	private doAria(label: string) {
+		const svg = this.element.nativeElement.firstChild;
+		if (svg) {
+			if (label === '') {
+				this.renderer.setAttribute(svg, 'aria-hidden', 'true');
+				this.renderer.removeAttribute(svg, 'aria-label');
+			} else {
+				this.renderer.removeAttribute(svg, 'aria-hidden');
+				this.renderer.setAttribute(svg, 'aria-label', label);
+			}
+		}
+	}
+
 }
