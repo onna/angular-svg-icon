@@ -90,6 +90,7 @@ The following attributes can be set on svg-icon:
 - **[applyClass]** - An optional boolean (default is false) that copies the `class` attribute on the `svg-icon` and adds it to the SVG.
 - **[svgClass]** - An optional string of the class or classes to apply to the SVG (independent of what is set for the class on the `svg-icon`).
 - **[viewBox]** - An optional string to set the viewBox on the SVG. If the `viewBox="auto"`, then `svg-icon` will attempt to convert the SVG's width and height attributes to a `viewBox="0 0 w h"`. Both explicitly setting the viewBox or `auto` setting the viewBox will remove the SVG's width and height attributes.
+- **[svgAriaLabel]** - An optional string to set the SVG's `aria-label`. If the SVG does not have a pre-existing `aria-label` and the `svgAriaLabel` is not set, then the SVG will be loaded with `aria-hidden=true`. If the SVG has an 	aria-label`, then the SVG's default will be used. To remove the SVG's `aria-label`, assign an empty string `''` to `svgAriaLabel`. Doing so will remove any existing `aria-label` and set `aria-hidden=true` on the SVG.
 
 Deprecated attribute:
 - **[applyCss]** - Renamed as **[applyClass]** (as of v9.2.0).
